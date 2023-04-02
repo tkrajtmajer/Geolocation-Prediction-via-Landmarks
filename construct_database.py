@@ -5,13 +5,21 @@ import os
 import cv2
 import sqlite3
 import numpy as np
+import pickle
 import SIFT_transform
+import indexer
+import clustering
+
 
 folder_path = 'resources/images/'
 
 # create database
 db_path = 'resources/db/'
 db_name = 'database'
+
+features_path = 'resources/db/sift_features.pkl'
+vocab_path = 'resources/db/sift_vocabulary.pkl'
+num_clusters = 50
 
 # check if database already exists
 new = False
@@ -34,15 +42,13 @@ else:
     sys.exit(0)
 
 if new:
-    # create tables
-    connection = sqlite3.connect(db_path + db_name + '.sqlite')
-    c = connection.cursor()
-
-    c.execute('''CREATE TABLE images
-             (id INTEGER PRIMARY KEY AUTOINCREMENT,
-              image_path TEXT,
-              keypoint BLOB,
-              descriptor BLOB)''')
+    # create indexer
+    indexer = indexer.Indexer(db_path + db_name + '.sqlite')
+    indexer.create_tables()
+    # store SIFT computed for each image in dictionary
+    features = {}
+    image_list = np.array([])
+    sift_vocabulary = None
 
     for folder in os.listdir(folder_path):
         full_path = os.path.join(folder_path, folder)
@@ -66,6 +72,8 @@ if new:
 
                     # compute sift for image
                     keypoints, descriptors = SIFT_transform.make_sift(img_resize)
+                    features[file_path] = descriptors
+                    image_list = np.append(image_list, file_path)
 
                     # DEBUG display SIFT
                     '''
@@ -75,11 +83,26 @@ if new:
                     cv2.destroyAllWindows()
                     '''
 
-                    # save image descriptors
-                    keypoint_bytes = np.array([kp.pt for kp in keypoints]).tobytes()
-                    descriptor_bytes = descriptors.tobytes()
+    # compute SIFT features and vocabulary
+    with open(features_path, 'wb') as f:
+        print('saving features to', features_path, '...')
+        pickle.dump(features, f)
 
-                    c.execute("INSERT INTO images (image_path, keypoint, descriptor) VALUES (?, ?, ?)", (file_path, keypoint_bytes, descriptor_bytes))
-                    connection.commit()
+    # Create a visual vocabulary (Bag of Words) from the sift extracted features.
+    if os.path.isfile(vocab_path):
+        compute = input("Found existing vocabulary: " + vocab_path + " Do you want to recompute it? ([Y]/N): ")
+    else:
+        compute = 'Y'
+    if compute == 'Y' or compute == '':
+        print('Creating SIFT vocabulary ... ')
+        sift_vocabulary = clustering.Cluster("cluster")
+        sift_vocabulary.train(features, num_clusters)
+        with open(vocab_path, 'wb') as f:
+            pickle.dump(sift_vocabulary, f)
 
-    connection.close()
+    print('\nAdding sift features to database ...\n')
+    for i in range(len(image_list)):
+        indexer.add_index(image_list[i], features[image_list[i]], sift_vocabulary)
+
+    indexer.db_commit()
+    print('\nDone\n')
