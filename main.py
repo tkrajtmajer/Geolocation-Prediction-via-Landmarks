@@ -38,7 +38,8 @@ for video in ground_truth[:, 0]:
         input_prediction = geolocation.find_location(frame[0])
         db_prediction = geolocation.find_location(match_list[0][0])
 
-        if input_prediction == db_prediction:
-            score += 1
+        if input_prediction is not None and db_prediction is not None:
+            if np.isclose(input_prediction, db_prediction, rtol=0.1):
+                score += 1
 
         print(name, prediction, "accuracy =", score / len(frames))
