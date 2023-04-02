@@ -11,9 +11,9 @@ def find_location(image_path):
     longitude_ref = exif_data.get('GPS GPSLongitudeRef')
 
     if latitude and longitude:
-        if latitude_ref.values[0] is 'S':
+        if latitude_ref.values[0] == 'S':
             latitude = -latitude
-        if longitude_ref.values[0] is 'W':
+        if longitude_ref.values[0] == 'W':
             longitude = -longitude
 
         return latitude, longitude

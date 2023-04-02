@@ -3,6 +3,7 @@ import numpy as np
 from processing import *
 from matching import *
 import evaluate
+import geolocation
 
 
 def get_name(file):
@@ -34,7 +35,10 @@ for video in ground_truth[:, 0]:
         # name = get_name(frame[0])
         # prediction = get_name(match_list[0][0])
 
-        if name == prediction:
+        input_prediction = geolocation.find_location(frame[0])
+        db_prediction = geolocation.find_location(match_list[0][0])
+
+        if input_prediction == db_prediction:
             score += 1
 
         print(name, prediction, "accuracy =", score / len(frames))
