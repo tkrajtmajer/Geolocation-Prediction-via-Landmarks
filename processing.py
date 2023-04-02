@@ -33,5 +33,5 @@ def get_frames(path, frequency):
             frames.append(processed_frame)
             show(processed_frame)
 
+    return frames
 
-get_frames("./VIDEO0191.avi", 1)
