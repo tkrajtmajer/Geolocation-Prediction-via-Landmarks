@@ -9,13 +9,11 @@ def show(image, title="debug"):
 
 
 def get_processed_frame(im):
-    # resize
-    new_size = (int(im.shape[1] / 4), int(im.shape[0] / 4))
-    resized_image = cv2.resize(im, new_size)
-    # convert to grayscale
-    gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
+    # resize and convert to grayscale
+    resized_image = cv2.resize(im, (640, 480))
+    # gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
     # return the blurred image
-    return cv2.GaussianBlur(gray, (5, 5), 0)
+    return cv2.GaussianBlur(resized_image, (5, 5), 0)
 
 
 def get_frames(path, frequency):
@@ -24,21 +22,37 @@ def get_frames(path, frequency):
     video = cv2.VideoCapture(path)
     print(path, frequency)
 
+    # calculate duration of the video
+    seconds = round(video.get(cv2.CAP_PROP_FRAME_COUNT) / video.get(cv2.CAP_PROP_FPS))
+    print('duration:', seconds)
+
     n = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     sample_frequency = int(video.get(cv2.CAP_PROP_FPS) / frequency)
+
+    frames_taken = 0
     count = 0
+    success, frame = video.read()
 
-    for i in range(0, n, sample_frequency):
-        # index = sliding_window(video, sample_frequency, i)
-        # video.set(1, index)
+    while success:
+        processed_frame = get_processed_frame(frame)
+        frames.append(processed_frame)
+
+        frames_taken += 1
+        count += frequency
+        video.set(cv2.CAP_PROP_POS_FRAMES, count)
         success, frame = video.read()
-        if success:
-            count += 1
-            processed_frame = get_processed_frame(frame)
-            frames.append(processed_frame)
-            # show(processed_frame)
 
-    print("Frames extracted from video:", count)
+    # for i in range(0, n, sample_frequency):
+    #     # index = sliding_window(video, sample_frequency, i)
+    #     video.set(cv2.CAP_PROP_POS_FRAMES, i)
+    #     success, frame = video.read()
+    #     if success:
+    #         count += 1
+    #         processed_frame = get_processed_frame(frame)
+    #         frames.append(processed_frame)
+    #         # show(processed_frame)
+
+    print("Frames extracted from video:", frames_taken)
     return frames
     pass
 
