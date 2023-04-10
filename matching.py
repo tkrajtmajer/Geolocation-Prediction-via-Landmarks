@@ -9,7 +9,7 @@ def sift_matching(image, database):
     k = 10
     # read the database descriptors
     database_descriptors = read(database)
-    key_points, descriptors = make_sift(image)
+    key_points, descriptors = make_sift(image, 400)
 
     result = []
     for des in database_descriptors:
@@ -19,4 +19,5 @@ def sift_matching(image, database):
         result.append([des[0], np.sum(distance)])
 
     result.sort(key=lambda x: x[1])
+    print('Matching complete')
     return result
