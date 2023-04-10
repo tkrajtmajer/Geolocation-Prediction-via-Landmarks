@@ -3,13 +3,12 @@ import image_search
 
 base = 'resources/db/'
 db_name = 'resources/db/database.sqlite'
-
+search = image_search.Searcher(db_name)
 
 class Query:
-    def __init__(self, db):
-        search = image_search.Searcher(db_name)  # odakle mi searcher
+      # odakle mi searcher
 
-    def find(sift_query, hist_query, candidates=3):
+    def find(self, sift_query, hist_query, candidates=3):
         sift_winners = None
         sift_distances = None
         hist_winners = None
