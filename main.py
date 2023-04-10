@@ -4,106 +4,52 @@ from processing import *
 from matching import *
 import evaluate
 import geolocation
-import cgi
-import indexer
+import SIFT_transform
+import query
 # import database_reader
-print('START')
 
+folder_path = 'resources/videos/'
 db_path = 'resources/db/'
 db_name = 'database'
-# indexer = indexer.Indexer(db_path + db_name + '.sqlite')
 
+print('START')
 
-def get_name(file):
-    print(file)
-    names = np.array(file.split("_"))
-    return names[-1:][0].split(".")[0]
+q = query.Query
 
+for file in os.listdir(folder_path):
+    file_path = os.path.join(folder_path, file)
+    print(file_path)
+    cap = cv2.VideoCapture(file_path)
 
-# database path
-database_path = "resources/db.txt"
+    if not cap.isOpened():
+        print("Error opening video file")
 
-# read gt values
-ground_truth = evaluate.read_ground_truth(True)
-
-# get user video
-form = cgi.FieldStorage()
-user_video = form.getvalue('file')
-
-# VIDEO0191.avi
-# print("Input video name:")
-video_name = 'VIDEO0191.avi' # input()
-
-video_path = 'resources/videos/' + video_name
-frequency = 10
-frames = get_frames(video_path, frequency)
-score = 0
-acc = 0
-
-for i in range(len(frames)):
-    frame = frames[i]
-    cont = frame[1]
-    # print('main', cont)
-    print("Matching frame " + str(i))
-    match_list = sift_matching(cont, database_path)
-
-    # get the top prediction and compare with the truth label
-    name = ''
-    prediction = ''
-    # name = get_name(frame[0])
-    # prediction = get_name(match_list[0][0])
-
-    input_prediction = geolocation.find_location(frame[0])
-    db_prediction = geolocation.find_location(match_list[0][0])
-
-    # if (name == prediction):
-    #     acc += 1
-    # print(name, pred, "accuracy =", acc / len(frames))
-
-    if input_prediction is not None and db_prediction is not None:
-        if np.isclose(input_prediction, db_prediction, rtol=0.1):
-            print('Correct guess')
-        else:
-            print('NOT correct')
-
-
-"""
-# Check if file was uploaded
-if user_video.filename:
-    # Get the filename
-    filename = os.path.basename(user_video.filename)
-
-    # Create a temporary file to store the uploaded video
-    with open(filename, 'wb') as tmpfile:
-        # Read the uploaded video data and write it to the temporary file
-        tmpfile.write(user_video.file.read())
-
-    # Open the temporary file using VideoCapture
-    cap = cv2.VideoCapture(filename)
-
-    # Check if camera opened successfully
-    if (cap.isOpened()== False):
-        print("Error opening video stream or file")
-
-    # Read until video is completed
-    while(cap.isOpened()):
-        # Capture frame-by-frame
+    while cap.isOpened():
+        # Read a frame from the video file
         ret, frame = cap.read()
-        if ret == True:
-            # Display the resulting frame
-            cv2.imshow('Frame',frame)
-            # Press Q on keyboard to exit
-            if cv2.waitKey(25) & 0xFF == ord('q'):
-                break
-        # Break the loop
-        else:
+
+        # Check if a frame was successfully read
+        if not ret:
             break
 
-    # When everything done, release the video capture object and delete the temporary file
-    cap.release()
-    os.remove(filename)
+        # Process the frame
+        img_resize = cv2.resize(frame, (640, 480))
+        keypoints, descriptors = SIFT_transform.make_sift(img_resize)
+        chans = cv2.split(img_resize)
+        color_hist = np.zeros((256, len(chans)))
+        for i in range(len(chans)):
+            color_hist[:, i] = np.histogram(chans[i], bins=np.arange(256 + 1))[0] / float(
+                (chans[i].shape[0] * chans[i].shape[1]))
 
-# If no file was uploaded, display an error message
-else:
-    print('No file was uploaded')
-"""
+        sift_winners, sift_distances, hist_winners, hist_distances = q.find(descriptors, color_hist)
+        print(sift_winners, sift_distances, hist_winners, hist_distances)
+
+        # Display the frame (optional)
+        cv2.imshow('Frame', frame)
+
+        # Exit the loop if the 'q' key is pressed
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
