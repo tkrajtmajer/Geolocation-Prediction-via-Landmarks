@@ -6,6 +6,7 @@ db_name = 'resources/db/database.sqlite'
 
 search = image_search.Searcher(db_name)  # odakle mi searcher
 
+
 def find(sift_query, hist_query, candidates=3):
     sift_winners = None
     sift_distances = None
