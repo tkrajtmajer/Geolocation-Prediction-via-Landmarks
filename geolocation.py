@@ -2,7 +2,7 @@ import exifread
 
 
 def find_location(image_path):
-    with open(image_path, 'rb') as f:
+    with open(image_path, 'rb', encoding='utf8') as f:
         exif_data = exifread.process_file(f)
 
     latitude = exif_data.get('GPS GPSLatitude')

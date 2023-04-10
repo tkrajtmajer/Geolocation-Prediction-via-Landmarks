@@ -5,6 +5,13 @@ from matching import *
 import evaluate
 import geolocation
 import cgi
+import indexer
+# import database_reader
+print('START')
+
+db_path = 'resources/db/'
+db_name = 'database'
+# indexer = indexer.Indexer(db_path + db_name + '.sqlite')
 
 
 def get_name(file):
@@ -23,34 +30,44 @@ ground_truth = evaluate.read_ground_truth(True)
 form = cgi.FieldStorage()
 user_video = form.getvalue('file')
 
+# VIDEO0191.avi
+# print("Input video name:")
+video_name = 'VIDEO0191.avi' # input()
+
+video_path = 'resources/videos/' + video_name
+frequency = 10
+frames = get_frames(video_path, frequency)
+score = 0
+acc = 0
+
+for i in range(len(frames)):
+    frame = frames[i]
+    cont = frame[1]
+    # print('main', cont)
+    print("Matching frame " + str(i))
+    match_list = sift_matching(cont, database_path)
+
+    # get the top prediction and compare with the truth label
+    name = ''
+    prediction = ''
+    # name = get_name(frame[0])
+    # prediction = get_name(match_list[0][0])
+
+    input_prediction = geolocation.find_location(frame[0])
+    db_prediction = geolocation.find_location(match_list[0][0])
+
+    # if (name == prediction):
+    #     acc += 1
+    # print(name, pred, "accuracy =", acc / len(frames))
+
+    if input_prediction is not None and db_prediction is not None:
+        if np.isclose(input_prediction, db_prediction, rtol=0.1):
+            print('Correct guess')
+        else:
+            print('NOT correct')
+
+
 """
-for video in ground_truth[:, 0]:
-    # use this video as a test video
-    video_path = 'resources/videos/' + video + '.avi'
-    frequency = 1
-    frames = get_frames(video_path, frequency)
-    score = 0
-
-    for frame in frames:
-        cont = frame[1]
-        match_list = sift_matching(cont, database_path)
-
-        # get the top prediction and compare with the truth label
-        name = ''
-        prediction = ''
-        # name = get_name(frame[0])
-        # prediction = get_name(match_list[0][0])
-
-        input_prediction = geolocation.find_location(frame[0])
-        db_prediction = geolocation.find_location(match_list[0][0])
-
-        if input_prediction is not None and db_prediction is not None:
-            if np.isclose(input_prediction, db_prediction, rtol=0.1):
-                score += 1
-
-        print(name, prediction, "accuracy =", score / len(frames))
-"""
-
 # Check if file was uploaded
 if user_video.filename:
     # Get the filename
@@ -89,3 +106,5 @@ if user_video.filename:
 # If no file was uploaded, display an error message
 else:
     print('No file was uploaded')
+"""
+"""
