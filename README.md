@@ -1,1 +1,51 @@
-# Invention
+# Invention Assignment 
+## Geolocation Prediction via Landmarks
+
+### setup
+install the dependencies with
+```
+pip install -r requirements.txt
+```
+
+### run
+to run the application first run
+```
+python construct_database.py
+```
+to create the database with all the entries, then
+```
+python main.py
+```
+
+### directory setup
+the directory structure is set up as follows:
+```
+project_root/
+├── resources/
+│   ├── db/
+│   │   ├── ...
+│   ├── images/
+│   │   ├── aaf
+│   │   ├── agi
+│   │   ├── ...
+│   │   └── zen
+|   ├── videos/
+│   │   ├── VIDEO0191.avi
+│   │   ├── ...
+│   └── ...
+├── main.py
+├── construct_database.py
+├── ...
+└── README.md
+```
+
+#### List of files that contain new code:
+- construct_database.py
+- database_reader.py
+- evaluate.py
+- geolocation.py
+- main.py
+- matching.py
+- processing.py
+- runWeb.py
+- SIFT_transform.py
