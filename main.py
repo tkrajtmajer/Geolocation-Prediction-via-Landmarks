@@ -62,7 +62,7 @@ def run(video):
         if not ret:
             break
 
-        if counter == 1:
+        if counter == 0:
             out_frame = frame
 
         # Increment the frame count
