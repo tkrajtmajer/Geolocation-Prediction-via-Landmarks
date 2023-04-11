@@ -25,16 +25,16 @@ num_clusters = 50
 # check if database already exists
 new = False
 if os.path.isfile(db_path + db_name + '.sqlite'):
-    action = input('Database already exists. Do you want to (r)emove, (a)ppend or (q)uit? ')
+    action = input('Database already exists. Do you want to (m)ake new, (s)kip or (q)uit? ')
     print('action =', action)
 else:
     action = 'c'
-if action == 'r':
-    print('removing database', db_name, '...')
+if action == 'm':
+    print('creating database', db_name, '...')
     os.remove(db_path + db_name + '.sqlite')
     new = True
-elif action == 'a':
-    print('appending to database ... ')
+elif action == 's':
+    print('skipping ... ')
 elif action == 'c':
     print('creating database', db_name, '...')
     new = True
