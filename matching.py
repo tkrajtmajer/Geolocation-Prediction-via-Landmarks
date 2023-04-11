@@ -1,6 +1,3 @@
-import cv2
-import numpy as np
-from SIFT_transform import *
 from database_reader import *
 
 

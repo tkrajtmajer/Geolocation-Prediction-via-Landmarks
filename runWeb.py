@@ -1,7 +1,5 @@
 from flask import Flask, request, render_template
 import cv2
-import subprocess
-import sys
 import os
 import main
 import base64
@@ -10,7 +8,6 @@ import base64
 # Flask constructor
 app = Flask(__name__, template_folder='resources/templates')
 
-#print(app.template_folder)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -29,6 +26,7 @@ def index():
 
     return render_template('index.html')
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 

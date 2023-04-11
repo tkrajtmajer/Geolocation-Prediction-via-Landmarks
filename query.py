@@ -5,10 +5,11 @@ base = 'resources/db/'
 db_name = 'resources/db/database.sqlite'
 search = image_search.Searcher(db_name)
 
-class Query:
-      # odakle mi searcher
 
-    def find(self, sift_query, hist_query, candidates=3):
+class Query:
+
+    @staticmethod
+    def find(sift_query, hist_query, candidates=3):
         sift_winners = None
         sift_distances = None
         hist_winners = None

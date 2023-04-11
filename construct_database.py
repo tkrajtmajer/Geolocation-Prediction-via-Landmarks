@@ -3,7 +3,6 @@
 import sys
 import os
 import cv2
-import sqlite3
 import numpy as np
 import pickle
 import SIFT_transform
@@ -49,7 +48,6 @@ if new:
     # store SIFT computed for each image in dictionary
     features_SIFT = {}
     features_colorhist = {}
-    features_combined = {}
     image_list = np.array([])
     vocabularySIFT = None
     vocabularyHist = None
@@ -77,7 +75,6 @@ if new:
                     # compute sift for image
                     keypoints, descriptors = SIFT_transform.make_sift(img_resize)
                     features_SIFT[file_path] = descriptors
-                    #print(descriptors.shape)
 
                     # compute colorhist for image
                     chans = cv2.split(img_resize)
@@ -85,12 +82,6 @@ if new:
                     for i in range(len(chans)):
                         color_hist[:, i] = np.histogram(chans[i], bins=np.arange(256 + 1))[0] / float((chans[i].shape[0] * chans[i].shape[1]))
                     features_colorhist[file_path] = color_hist
-                    #print(color_hist.flatten().shape)
-
-                    #features_combined[file_path] = np.concatenate((descriptors.flatten(), color_hist.flatten()), axis=0)
-                    #feature_vector = descriptors
-
-                    #features_combined[file_path] =
 
                     image_list = np.append(image_list, file_path)
 

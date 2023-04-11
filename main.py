@@ -1,12 +1,8 @@
-import cv2
-import numpy as np
 from processing import *
 from collections import Counter
-import os
-import sys
-import evaluate
 import SIFT_transform
 import query
+import random
 
 folder_path = 'resources/videos/'
 db_path = 'resources/db/'
@@ -28,15 +24,24 @@ dictionary_locations = {
 frequency = 10
 
 
-def process(results):
+def process(results, percent_sift):
     # get a list of tuples, where first is value of sift, second of colorhist
     arr = np.array(results)
-    most_common = []
-    for column in arr.T:
-        counter = Counter(column)
-        most_common.append(counter.most_common(1)[0][0])
+    n_rows, n_cols = arr.shape
+    counts = []
+    for i in range(n_cols):
+        counter = Counter(arr[:, i])
+        most_common, _ = counter.most_common(1)[0]
+        weight = percent_sift if i == 0 else (1-percent_sift)
+        counts.append((most_common, weight))
 
-    return most_common
+    # combine the counts into one final result
+    combined_count = Counter()
+    for value, weight in counts:
+        combined_count[value] += weight
+
+    # return the most common element from the combined count
+    return combined_count.most_common(1)[0][0]
 
 
 def run(video):
@@ -54,6 +59,8 @@ def run(video):
     if not cap.isOpened():
         print("Error opening video file")
 
+    rand_frame = random.randint(0, int(cap.get(cv2.CAP_PROP_FRAME_COUNT) // frequency))
+
     while cap.isOpened():
         # Read a frame from the video file
         ret, frame = cap.read()
@@ -63,6 +70,9 @@ def run(video):
             break
 
         if counter == 0:
+            out_frame = frame
+
+        if abs(counter-rand_frame) == 1:
             out_frame = frame
 
         # Increment the frame count
@@ -100,6 +110,6 @@ def run(video):
     cv2.destroyAllWindows()
 
     print("results for file ", results)
-    processed = process(results)
+    processed = process(results, 0.7)
     # process results
     return processed, out_frame

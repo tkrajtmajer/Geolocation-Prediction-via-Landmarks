@@ -1,9 +1,5 @@
-import cv2
-import numpy as np
 from processing import *
 from matching import *
-import evaluate
-import geolocation
 import SIFT_transform
 import query
 

@@ -1,8 +1,4 @@
 import os, sys
-from asyncore import read
-import cv2
-import numpy as np
-import csv
 from pathlib import Path
 from SIFT_transform import *
 
