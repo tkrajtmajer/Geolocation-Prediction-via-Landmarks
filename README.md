@@ -14,8 +14,9 @@ python construct_database.py
 ```
 to create the database with all the entries, then
 ```
-python main.py
+python runWeb.py
 ```
+to access index.html at http://127.0.0.1:5000/
 
 ### directory setup
 the directory structure is set up as follows:
@@ -26,16 +27,21 @@ project_root/
 │   │   ├── ...
 │   ├── images/
 │   │   ├── aaf
+│   │   |   ├── ...
 │   │   ├── agi
+│   │   |   ├── ...
 │   │   ├── ...
 │   │   └── zen
 |   ├── videos/
+|   |   ├── server/
+│   │   |   ├── ...
 │   │   ├── VIDEO0191.avi
 │   │   ├── ...
 │   └── ...
 ├── main.py
 ├── construct_database.py
 ├── ...
+├── requirements.txt
 └── README.md
 ```
 
@@ -49,3 +55,5 @@ project_root/
 - processing.py
 - runWeb.py
 - SIFT_transform.py
+- templates/display_res.html
+- templates/index.html
