@@ -54,7 +54,7 @@ class Searcher:
     def query_iw(self, type, h):
         """ Find a list of matching images for image histogram h"""
         candidates = self.candidates_from_histogram(type, h)
-        print(candidates)
+        # print(candidates)
         matchscores = []
         for imid in candidates:
             # get the name

@@ -17,14 +17,12 @@ def get_processed_frame(im):
 
 
 def get_frames(path, frequency):
-    print("Processing video...")
     frames = []
     video = cv2.VideoCapture(path)
-    print(path, frequency)
+    # print(path)
 
     # calculate duration of the video
     seconds = round(video.get(cv2.CAP_PROP_FRAME_COUNT) / video.get(cv2.CAP_PROP_FPS))
-    print('duration:', seconds)
 
     n = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     sample_frequency = int(video.get(cv2.CAP_PROP_FPS) / frequency)
@@ -52,7 +50,7 @@ def get_frames(path, frequency):
     #         frames.append(processed_frame)
     #         # show(processed_frame)
 
-    print("Frames extracted from video:", frames_taken)
+    # print("Frames extracted from video:", frames_taken)
     return frames
     pass
 
