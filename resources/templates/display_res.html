@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+          * {
+              box-sizing: border-box;
+              margin: 0;
+          }
+          body {
+              text-align: center;
+              background-color: #F5E6E8;
+          }
+          #main {
+              margin-top: 2%;
+              padding: 20px;
+              color: black;
+          }
+          h1 {
+              font-size: 90px;
+          }
+          h2 {
+              font-size: 70px;
+          }
+          img {
+              width: 640px;
+              height: 480px;
+          }
+    </style>
+    <meta charset="UTF-8">
+    <title>Location finder</title>
+</head>
+<body>
+
+    <div id="main">
+        <h1>Location <span id="location_is_found">found</span></h1>
+        <br><br><br><br><br><br>
+        <img src="data:image/jpg;base64,{{ resim }}" id="location_image" alt="Processed Image"/>
+        <h2 id="location_name"><p>{{ result }}</p></h2>
+    </div>
+
+</body>
+</html>

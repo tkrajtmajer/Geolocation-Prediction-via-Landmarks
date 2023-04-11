@@ -1,0 +1,66 @@
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+        body {
+            text-align: center;
+            background-color: #192A51;
+        }
+        #main {
+            margin-top: 12%;
+            padding: 20px;
+        }
+
+        .btn {
+            background-color:#967aa1;
+            border-radius:28px;
+            border:1px solid #967aa1;
+            display:inline-block;
+            cursor:pointer;
+            color:#f5e6e8;
+            font-size:20px;
+            padding:16px 30px;
+            text-decoration:none;
+        }
+        .btn:hover {
+            background-color:#967aa1;
+        }
+        .btn:active {
+            position:relative;
+            top:1px;
+        }
+        h1 {
+            color: #D5C6E0;
+            font-size: 100px;
+        }
+        h2 {
+            color: #AAA1C8;
+            font-size: 80px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Where am I? Delft edition</title>
+</head>
+<body>
+
+    <div id="main">
+        <h1>Where am I? <span style="color: #AAA1C8">Delft ed</span></h1>
+        <br><br><br><br><br><br>
+        <h2>choose a video</h2>
+        <br>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <input type="file" id="myFile" name="video" class="btn" accept="video/*">
+          <input type="submit" onclick="Upload()" class="btn">
+        </form>
+    </div>
+
+    <script>
+
+
+    </script>
+</body>
+</html>
