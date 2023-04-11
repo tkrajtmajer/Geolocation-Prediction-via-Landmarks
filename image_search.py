@@ -5,7 +5,7 @@ import numpy as np
 
 class Searcher:
     def __init__(self, db):
-        self.con = sqlite.connect(db)
+        self.con = sqlite.connect(db, check_same_thread=False)
 
     def __del__(self):
         self.con.close()

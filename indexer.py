@@ -8,7 +8,7 @@ import pickle
 
 class Indexer(object):
     def __init__(self, db):
-        self.con = sqlite3.connect(db)
+        self.con = sqlite3.connect(db, check_same_thread=False)
 
     def __del__(self):
         self.con.close()
