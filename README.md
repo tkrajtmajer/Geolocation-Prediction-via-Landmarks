@@ -12,11 +12,12 @@ to run the application first run
 ```
 python construct_database.py
 ```
-to create the database with all the entries, then
+to create the database with all the entries located at 'resources/images'
+After the script is executed, you can run 
 ```
 python runWeb.py
 ```
-to access index.html at http://127.0.0.1:5000/
+to access the local server at url 'http://127.0.0.1:5000/'. Here you can upload the video of your choice. 
 
 ### directory setup
 the directory structure is set up as follows:
